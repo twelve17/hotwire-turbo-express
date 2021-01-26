@@ -1,0 +1,51 @@
+{
+  "name": "hotwire-turbo-express",
+  "version": "0.0.1",
+  "description": "Hotwire Turbo ExpressJS backend",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": {
+      "require": "./commonjs/index.js",
+      "default": "./esm/index.mjs",
+      "notAcceptable": "./esm/not-acceptable.mjs"
+    }
+  },
+  "module": "./esm/index.mjs",
+  "scripts": {
+    "build": "rm -fr dist && rollup -c && packito -n",
+    "dev": "rollup -c  &&  cross-env NODE_ENV=development node ./dist",
+    "lint": "eslint ./src/index.js",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Tests are in the example-app.\" && exit 1"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twelve17/hotwire-turbo-express.git"
+  },
+  "keywords": [
+    "hotwire",
+    "turbo"
+  ],
+  "author": "Alex Porras <code@alx.pt>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twelve17/hotwire-turbo-express/issues"
+  },
+  "homepage": "https://github.com/twelve17/hotwire-turbo-express#readme",
+  "dependencies": {
+    "escape-html": "^1.0.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.1.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "packito": "^0.5.0",
+    "rollup": "^2.38.0"
+  }
+}

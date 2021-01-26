@@ -1,0 +1,12 @@
+<div
+  style="display: flex; flex-direction: row; align-items: center; border: 1px solid gray; margin: 5px 0; padding: 0 15px"
+  name="#item-<%= item.id %>">
+  <h4 style="padding: 2px 20px 2px 2px; margin: 8px 0px;">
+    Item ID: <%= item.id %>
+  </h4>
+
+  <form action="/item-actions/modify" method="post">
+    <input type="hidden" name="id" value="<%= item.id %>" />
+    <button name="list-action" value="remove">Remove Item</button>
+  </form>
+</div>

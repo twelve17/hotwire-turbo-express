@@ -1,0 +1,12 @@
+{
+  "remove": {
+    "devDependencies": "*",
+    "scripts": "*",
+    "type": true,
+    "esm": true
+  },
+  "replace": {
+    "main": "./commonjs/index.js"
+  },
+  "publisher": "np"
+}

@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+
+  <h1>Multiple Stream Response Example</h1>
+  <p>Clicking "More" will return a response with two <code>&lt;turbo-stream/&gt;</code> tags: one to <code>append</code>
+    items
+    to the list, and another to <code>replace</code> the "More" button with a new button that has the updated
+    <code>cursor</code> to fetch the <i>next</i> page.</i>
+  </p>
+
+
+  <div id="item-list">
+    <%- include('./partials/item-list') %>
+  </div>
+
+  <%- include('./partials/item-list-more-button') %>
+
+    <%- include('../partials/footer') %>

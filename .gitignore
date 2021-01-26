@@ -1,3 +1,8 @@
+dist/*
+example-app/node_modules
+example-app/hotwire-turbo-express
+example-app/tmp
+
 # Logs
 logs
 *.log

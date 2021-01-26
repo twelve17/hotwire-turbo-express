@@ -1,0 +1,6 @@
+<% if (hasMore) { %>
+  <form id="item-list-more-button" action="/item-list/page" method="post">
+    <input type="hidden" name="cursor" value="<%= cursor %>" />
+    <button>More</button>
+  </form>
+  <% } %>
