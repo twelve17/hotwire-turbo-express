@@ -1,7 +1,9 @@
-dist/*
 example-app/node_modules
 example-app/hotwire-turbo-express
 example-app/tmp
+
+*.sw*
+**/.vscode
 
 # Logs
 logs

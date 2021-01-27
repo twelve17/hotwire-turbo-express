@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
-import turboStream  from 'hotwire-turbo-express';
+import turboStream from 'hotwire-turbo-express';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 
@@ -10,11 +10,12 @@ import * as itemStore from './lib/data';
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+// set up our faux database of items
 itemStore.seed();
 
 const app = express();
 
-const upload = multer()
+const upload = multer();
 app.use(turboStream());
 
 // view engine setup
@@ -25,27 +26,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(dirname, 'public')));
 
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
   app.locals.title = 'Example App';
-  return next();
+  next();
 });
 
-app.get('/', (req, res, next) => {
-  return res.render('index');
-});
+app.get('/', (req, res) => res.render('index'));
 
-app.get('/item-list', async (req, res, next) => {
+app.get('/item-list', async (req, res) => {
   await itemStore.seed();
   const { hasMore, items, nextCursor } = await itemStore.list();
   return res.render('item-list/index', {
     cursor: nextCursor,
     hasMore,
-    items
+    items,
   });
 });
 
-
-app.post('/item-list/page', upload.none(), async (req, res, next) => {
+/**
+ * Example showing usage of the renderViews function to
+ * return multiple turbo streams, each targeting different
+ * elements and with different actions.
+ */
+app.post('/item-list/page', upload.none(), async (req, res) => {
   const { hasMore, items, nextCursor } = await itemStore.list(req.body.cursor);
   return res.turboStream.renderViews([
     {
@@ -67,11 +70,15 @@ app.post('/item-list/page', upload.none(), async (req, res, next) => {
   ], true);
 });
 
-app.get('/item-actions', async (req, res, next) => {
+app.get('/item-actions', async (req, res) => {
   const items = await itemStore.load();
   return res.render('item-actions/index', { items });
 });
 
+/**
+ * Contrived example to show usage of different
+ * turbo stream action functions.
+ */
 app.post('/item-actions/modify', upload.none(), async (req, res, next) => {
   const view = 'item-actions/partials/item-list';
   const stream = { target: 'item-list' };
@@ -79,19 +86,21 @@ app.post('/item-actions/modify', upload.none(), async (req, res, next) => {
 
   const listAction = req.body['list-action'];
   switch (listAction) {
-    case "add":
+    case 'add': {
       // since the turbo action is "append", we only send the new item,
       // not the whole list of items
       const newItem = await itemStore.add();
       return res.turboStream.append(view, { items: [newItem] }, stream);
-    case "remove":
-      const id = req.body['id'];
+    }
+    case 'remove': {
+      const { id } = req.body;
       items = await itemStore.delete(parseInt(id, 10));
       return res.turboStream.update(view, { items }, stream);
-    case "clear":
+    }
+    case 'clear':
       items = await itemStore.truncate();
       return res.turboStream.update(view, { items }, stream);
-    case "reset":
+    case 'reset':
       items = await itemStore.seed();
       return res.turboStream.update(view, { items }, stream);
     default:
@@ -105,7 +114,8 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -67,7 +67,7 @@ describe('turboStream', () => {
     describe('without entries in the stream array', () => {
       const testCase = (req, res) => res.turboStream.renderViews([]);
 
-      it('should respond with two turbo streams', async () => {
+      it('should respond with an empty body', async () => {
         const response = await testRequest(testCase)
           .set('Accept', ACCEPT_HEADERS.turbo)
           .expect('Content-Type', CONTENT_TYPES.turbo)

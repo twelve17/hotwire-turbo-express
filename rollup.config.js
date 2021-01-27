@@ -13,8 +13,8 @@ export default [
     input: 'src/index.mjs',
     external: ['escape-html', 'util'],
     output: [
-      { file: path.join('dist', 'commonjs', 'index.js'), format: 'cjs', exports: 'named' },
-      { file: path.join('dist', pkg.module), format: 'es', exports: 'named' },
+      { file: pkg.main, format: 'cjs', exports: 'named' },
+      { file: pkg.module, format: 'es', exports: 'named' },
     ],
   },
   {
