@@ -4,7 +4,8 @@
 
   <%- include('partials/action-buttons') %>
 
-    <div id="item-list">
+    <div id="item-list" data-controller="stream"
+      data-sse-source-disabled="/item-actions/sse-stream?cursor=<%= cursor %>" data-ws-source="ws://localhost:3000">
       <% for (const item of items) { %>
         <%- include('partials/item-row', { item }) %>
           <% } %>
