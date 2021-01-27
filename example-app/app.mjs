@@ -1,6 +1,6 @@
 import express from 'express';
 import createError from 'http-errors';
-import turboStream from 'hotwire-turbo-express';
+import turboStream, { buildStreamTag } from 'hotwire-turbo-express';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -72,7 +72,69 @@ app.post('/item-list/page', upload.none(), async (req, res) => {
 
 app.get('/item-actions', async (req, res) => {
   const items = await itemStore.load();
-  return res.render('item-actions/index', { items });
+  const cursor = items.reduce((acc, i) => ((i.id > acc) ? i.id : acc), 0);
+  return res.render('item-actions/index', { cursor, items });
+});
+
+/**
+ * Contrived SSE example: runs a loop where it will query the
+ * faux datasource for a entry with an id (cursor) higher than
+ * the one provided in the query string. If any found, renders
+ * them in the view partial and sends the combined HTML to the client.
+ *
+ * This is a dumb example which causes the originating client to
+ * end up with duplicated new entries.
+ */
+app.get('/item-actions/sse-stream', async (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
+  });
+
+  let cursor = req.query.cursor ? parseInt(req.query.cursor, 10) + 1 : 0;
+  const view = 'item-actions/partials/item-list';
+  const stream = { target: 'item-list', action: 'append' };
+
+  const sleepSecs = 1;
+  const maxLoops = 1000;
+  let loopCount = 0;
+
+  const intervalId = setInterval(async () => {
+    loopCount += 1;
+    if (loopCount > maxLoops) {
+      clearInterval(intervalId);
+      res.end();
+      return;
+    }
+    const { items, nextCursor } = await itemStore.list(cursor);
+
+    if (items.length === 0) return;
+
+    const tags = items.reduce((acc, item) => {
+      res.render(view, { items: [item] }, (err, html) => {
+        if (err) {
+          // eslint-disable-next-line no-console
+          console.error('error rendering view:', err.message);
+        } else {
+          const tag = buildStreamTag(stream, html);
+          acc.push(tag);
+        }
+      });
+      return acc;
+    }, []);
+    const message = `data: ${tags.join('\n').replace(/\n/g, '')}\n\n`;
+    res.write(message);
+    if (nextCursor) cursor = nextCursor;
+  }, sleepSecs * 1000);
+
+  // If client closes connection, stop sending events
+  res.on('close', () => {
+    // eslint-disable-next-line no-console
+    console.log('SSE client disconnected');
+    clearInterval(intervalId);
+    res.end();
+  });
 });
 
 /**
@@ -123,7 +185,7 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send(`error:${err.message}`);
 });
 
 export default app;

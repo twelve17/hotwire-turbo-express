@@ -19,9 +19,18 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['routes/**/*.js', 'views/**/*.ejs'],
+      files: ['routes/**/*.mjs', 'views/**/*.ejs'],
       rules: {
         'no-underscore-dangle': 'off',
+      },
+    },
+    {
+      files: ['src/**/*.mjs'],
+      env: {
+        browser: true,
+      },
+      rules: {
+        'import/extensions': 'off',
       },
     },
 

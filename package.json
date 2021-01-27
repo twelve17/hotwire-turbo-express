@@ -8,7 +8,8 @@
     ".": {
       "require": "./dist/commonjs/index.js",
       "default": "./dist/esm/index.mjs",
-      "notAcceptable": "./dist/esm/not-acceptable.mjs"
+      "notAcceptable": "./dist/esm/not-acceptable.mjs",
+      "buildStreamFragment": "./dist/esm/index.mjs"
     }
   },
   "module": "./dist/esm/index.mjs",

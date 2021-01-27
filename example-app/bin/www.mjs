@@ -6,6 +6,7 @@
  */
 
 import http from 'http';
+import WebSocket from 'ws';
 import app from '../app';
 
 /**
@@ -92,3 +93,24 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onErrorListener(port));
 server.on('listening', onListeningListener(server));
+
+const wss = new WebSocket.Server({ noServer: true });
+wss.on('connection', (ws) => {
+  ws.on('message', (data) => {
+    console.log('WS server got message: ', data);
+
+    console.log('WS client count: ', wss.clients.length || 0);
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        console.log('WS sending message to client');
+        client.send(data);
+      }
+    });
+  });
+});
+
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
+  });
+});

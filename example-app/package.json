@@ -5,10 +5,11 @@
   "main": "app.mjs",
   "type": "module",
   "scripts": {
-    "lint:code": "eslint  --ext=mjs .",
+    "lint:code": "eslint  --ext=mjs,js .",
     "lint:css": "stylelint public/styles",
     "lint": "npm run lint:code && npm run lint:css",
-    "start": "nodemon ./bin/www.mjs"
+    "build": "webpack",
+    "start": "concurrently \"webpack -w\" \"nodemon ./bin/www.mjs\""
   },
   "author": "code@alx.pt",
   "license": "MIT",
@@ -34,19 +35,26 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^5.3.0",
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.7",
     "stylelint": "^13.9.0",
-    "stylelint-config-standard": "^20.0.0"
+    "stylelint-config-standard": "^20.0.0",
+    "webpack": "^5.18.0",
+    "webpack-cli": "^4.4.0"
   },
   "dependencies": {
+    "@hotwired/turbo": "^7.0.0-beta.3",
+    "@stimulus/webpack-helpers": "^2.0.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "hotwire-turbo-express": "file:../dist",
     "http-errors": "^1.8.0",
     "multer": "^1.4.2",
-    "ramda": "^0.27.1"
+    "ramda": "^0.27.1",
+    "stimulus": "^2.0.0",
+    "ws": "^7.4.2"
   }
 }

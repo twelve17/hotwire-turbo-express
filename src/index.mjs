@@ -10,7 +10,7 @@ const buildAttributes = (attributes) => Object.keys(attributes || {})
   .map((name) => [name, `"${escape(attributes[name])}"`].join('='))
   .join(' ');
 
-const buildStreamFragment = (attributes, content) => `
+export const buildStreamTag = (attributes, content) => `
   <turbo-stream ${buildAttributes(attributes)}>
     <template>
       ${content}
@@ -21,7 +21,7 @@ const buildStreamFragment = (attributes, content) => `
 const renderViewAsStreamFactory = (renderDelegate) => async (streamSpec) => {
   const { view, variables, stream } = streamSpec;
   const renderedView = await renderDelegate(view, variables);
-  return buildStreamFragment(stream, renderedView);
+  return buildStreamTag(stream, renderedView);
 };
 
 export function sendViewStream(res, body, onlyFormat, mimeType = MIME_TYPE) {
