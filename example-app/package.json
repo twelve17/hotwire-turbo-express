@@ -5,10 +5,10 @@
   "main": "app.mjs",
   "type": "module",
   "scripts": {
-    "install-dist": "cp -R ../dist hotwire-turbo-express",
-    "lint": "eslint  -c ./.eslintrc.cjs",
-    "start": "nodemon ./bin/www.mjs",
-    "test": "mocha"
+    "lint:code": "eslint  --ext=mjs .",
+    "lint:css": "stylelint public/styles",
+    "lint": "npm run lint:code && npm run lint:css",
+    "start": "nodemon ./bin/www.mjs"
   },
   "author": "code@alx.pt",
   "license": "MIT",
@@ -18,16 +18,33 @@
       "tmp/*"
     ]
   },
+  "stylelint": {
+    "extends": "stylelint-config-standard",
+    "syntax": "css",
+    "ignoreFiles": [
+      ".*",
+      "**/*.*js",
+      "**/*.md",
+      "bin/*",
+      "node_modules",
+      "public/js"
+    ],
+    "validate": [
+      "scss"
+    ]
+  },
   "devDependencies": {
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "stylelint": "^13.9.0",
+    "stylelint-config-standard": "^20.0.0"
   },
   "dependencies": {
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "hotwire-turbo-express": "file:hotwire-turbo-express",
+    "hotwire-turbo-express": "file:../dist",
     "http-errors": "^1.8.0",
     "multer": "^1.4.2",
     "ramda": "^0.27.1"

@@ -1,5 +1,6 @@
 module.exports = {
   plugins: ['mocha'],
+  root: true,
   env: {
     browser: false,
     es2021: true,
@@ -11,13 +12,13 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  ignorePatterns: ['public/stylesheets/**'],
+  ignorePatterns: ['public/**', '*.ejs'],
   rules: {
     'import/prefer-default-export': 'off',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   },
   overrides: [
-   {
+    {
       files: ['routes/**/*.js', 'views/**/*.ejs'],
       rules: {
         'no-underscore-dangle': 'off',

@@ -1,5 +1,4 @@
 import { saveItems } from './save-items';
-import { JSON_DATA_FILE } from './constants';
 
 const MAX_ITEMS = 11;
 
@@ -11,4 +10,4 @@ export const seedItems = async (max = MAX_ITEMS) => {
   const items = Array(max + 1).fill().map((_, i) => ({ id: i }));
   await saveItems(items);
   return items;
-}
+};
