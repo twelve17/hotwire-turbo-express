@@ -13,9 +13,8 @@
   },
   "module": "./dist/esm/index.mjs",
   "scripts": {
-    "build": "rm -fr dist && rollup -c && packito -n",
-    "dev": "rollup -c  &&  cross-env NODE_ENV=development node ./dist",
-    "lint": "eslint ./src/index.js",
+    "build": "npm run lint && npm run test && rm -fr dist && rollup -c && packito -n",
+    "lint": "eslint --ext mjs .",
     "prepublishOnly": "npm run build",
     "publish": "npm publish ./dist",
     "test": "mocha  --experimental-specifier-resolution=node"
