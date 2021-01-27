@@ -32,6 +32,11 @@ jobs:
     - run: npm run lint
     - run: npm test
     # https://github.com/andstor/jsdoc-action
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Build JSDoc
       uses: andstor/jsdoc-action@v1
       with:
