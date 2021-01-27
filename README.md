@@ -14,6 +14,10 @@ ExpressJS middleware for <a href="https://hotwire.dev/">hotwire</a> <a href="htt
 npm i hotwire-turbo-express
 ```
 
+# API
+
+See [docs](./docs/global.html)
+
 # Turbo Stream Protocol Notes
 
 Turbo is integrated with SSE or WebSockets by way of the `connectStreamSource` and `disconnectStreamSource` functions.

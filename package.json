@@ -15,11 +15,12 @@
   "module": "./dist/esm/index.mjs",
   "scripts": {
     "build": "npm run lint && npm run test && rm -fr dist && rollup -c && packito -n",
+    "docs": "jsdoc -c jsdoc.conf.json",
     "example:lint": "cd example-app && npm run lint",
     "example:setup": "npm run build && cd example-app && npm i",
     "example:start": "cd example-app && npm run start",
     "lint": "eslint --ext mjs .",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && npm run docs",
     "publish": "np",
     "test": "mocha  --experimental-specifier-resolution=node"
   },
@@ -53,6 +54,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-mocha": "^8.0.0",
     "express": "^4.17.1",
+    "jsdoc": "^3.6.6",
     "mocha": "^8.2.1",
     "np": "^7.2.0",
     "packito": "^0.5.0",
