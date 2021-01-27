@@ -45,8 +45,8 @@ See more examples in the example-app.
 ## Setup
 
 ```
+npm run build
 cd example-app
-npm run install-dist
 npm i
 ```
 
