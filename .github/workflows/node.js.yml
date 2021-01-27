@@ -37,10 +37,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
     - name: Build JSDoc
       uses: andstor/jsdoc-action@v1
       with:
-        config_file: ./jsdoc.conf.json
+        config_file: jsdoc.conf.json
     - name: Deploy JSDoc
       uses: peaceiris/actions-gh-pages@v3
       with:
