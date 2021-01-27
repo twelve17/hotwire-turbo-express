@@ -14,6 +14,10 @@ ExpressJS middleware for <a href="https://hotwire.dev/">hotwire</a> <a href="htt
 npm i hotwire-turbo-express
 ```
 
+# API
+
+See [JSDoc](https://twelve17.github.io/hotwire-turbo-express/global.html)
+
 # Turbo Stream Protocol Notes
 
 Turbo is integrated with SSE or WebSockets by way of the `connectStreamSource` and `disconnectStreamSource` functions.
@@ -101,6 +105,14 @@ npm run example:start
 ```
 
 Browse to http://localhost:3000
+
+# Development
+
+## Publishing
+
+```
+npm run release
+```
 
 # 🎩 Tip To
 
