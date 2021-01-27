@@ -17,7 +17,7 @@
     "dev": "rollup -c  &&  cross-env NODE_ENV=development node ./dist",
     "lint": "eslint ./src/index.js",
     "prepublishOnly": "npm run build",
-    "test": "echo \"Tests are in the example-app.\" && exit 1"
+    "test": "mocha  --experimental-specifier-resolution=node"
   },
   "files": [
     "dist"
@@ -42,10 +42,15 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
+    "ejs": "^3.1.5",
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-mocha": "^8.0.0",
+    "express": "^4.17.1",
+    "mocha": "^8.2.1",
     "packito": "^0.5.0",
-    "rollup": "^2.38.0"
+    "rollup": "^2.38.0",
+    "supertest": "^6.1.3"
   }
 }

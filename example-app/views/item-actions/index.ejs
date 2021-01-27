@@ -1,11 +1,13 @@
 <%- include('../partials/header') %>
 
-  <h1>Stream Actions Example</h1>
+  <h2>Stream Actions Example</h2>
 
-  <%- include('./partials/action-buttons') %>
+  <%- include('partials/action-buttons') %>
 
     <div id="item-list">
-      <%- include('./partials/item-list') %>
+      <% for (const item of items) { %>
+        <%- include('partials/item-row', { item }) %>
+          <% } %>
     </div>
 
     <%- include('../partials/footer') %>

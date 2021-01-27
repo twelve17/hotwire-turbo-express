@@ -30,7 +30,7 @@ export function sendViewStream(res, body, onlyFormat, mimeType = MIME_TYPE) {
       [mimeType]: function turboStreamResponse() {
         return res.send(body);
       },
-      default: notAcceptable,
+      default: notAcceptable.bind(res),
     });
   }
   return res.type(mimeType).send(body);
@@ -141,14 +141,20 @@ const turboStream = (mimeType = MIME_TYPE) => (_req, res, next) => {
       (streams || []).map(renderViewAsStream),
     );
     const output = compiledStreams.join('\n');
-    return sendViewStream(res, output, onlyFormat, mimeType);
+    const result = await sendViewStream(res, output, onlyFormat, mimeType);
+    return result;
   }
 
   res.turboStream = ACTIONS.reduce((acc, action) => {
     acc[action] = async function turboAction(view, variables, attr, onlyFormat = false) {
       const stream = { ...(attr || {}), action };
-      const output = await renderViewAsStream({ variables, view, stream });
-      return sendViewStream(res, output, onlyFormat, mimeType);
+      try {
+        const output = await renderViewAsStream({ variables, view, stream });
+        const result = await sendViewStream(res, output, onlyFormat, mimeType);
+        return result;
+      } catch (error) {
+        return next(error);
+      }
     };
     return acc;
   }, {});
