@@ -1,6 +1,6 @@
 {
   "name": "hotwire-turbo-express",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Hotwire Turbo ExpressJS backend",
   "type": "commonjs",
   "main": "dist/commonjs/index.js",
