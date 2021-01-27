@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: index.mjs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: index.mjs</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import escape from 'escape-html';
+import { promisify } from 'util';
+import { notAcceptable } from './not-acceptable';
+
+export const MIME_TYPE = 'text/vnd.turbo-stream.html';
+
+const ACTIONS = ['append', 'prepend', 'replace', 'update'];
+
+const buildAttributes = (attributes) => Object.keys(attributes || {})
+  .map((name) => [name, `"${escape(attributes[name])}"`].join('='))
+  .join(' ');
+
+export const buildStreamTag = (attributes, content) => `
+  &lt;turbo-stream ${buildAttributes(attributes)}>
+    &lt;template>
+      ${content}
+    &lt;/template>
+  &lt;/turbo-stream>
+`;
+
+const renderViewAsStreamFactory = (renderDelegate) => async (streamSpec) => {
+  const { view, variables, stream } = streamSpec;
+  const renderedView = await renderDelegate(view, variables);
+  return buildStreamTag(stream, renderedView);
+};
+
+export function sendViewStream(res, body, onlyFormat, mimeType = MIME_TYPE) {
+  if (onlyFormat) {
+    return res.format({
+      [mimeType]: function turboStreamResponse() {
+        return res.send(body);
+      },
+      default: notAcceptable.bind(res),
+    });
+  }
+  return res.type(mimeType).send(body);
+}
+
+/**
+ * @typedef {object} StreamSpec
+ * @property {object} stream - Attributes to set in the &lt;turbo-stream>
+ * tag.
+ * @param {string} view - Path to the view view to render inside
+ * the &lt;turbo-stream> tag.
+ * @param {object} variables - Variables to pass on to the view,
+ * in the same format as is done for req.render.
+ *
+ * @example
+ * &lt;pre>
+ * res.turboStream.renderViews(
+ *  [
+ *    {
+ *      stream: {
+ *        action: 'append',
+ *        target: 'item-list',
+ *      },
+ *      variables: { items, cursor: nextCursor },
+ *      view: 'item-list/partials/item-list',
+ *    },
+ *    {
+ *      stream: {
+ *        action: 'replace',
+ *        target: 'item-list-more-button',
+ *      },
+ *      variables: { cursor: nextCursor, hasMore },
+ *      view: 'item-list/partials/item-list-more-button',
+ *    },
+ *   ],
+ *   true
+ * );
+ * &lt;/pre>
+ *
+ */
+
+/**
+ * @typedef {function} TurboSingleStreamActionFunction
+ *
+ * Function which will render a response with the a given
+ * template and variables, wrapped in a &lt;turbo-stream> tag.
+ *
+ streams, onlyFormat = false
+
+ * @param {Array&lt;StreamSpec>} streams - Array of stream specifications.
+ * @param {boolean} [onlyFormat=false] - If true, will wrap the response in
+ * a "res.format" object, so that the route will _only_ respond to
+ * the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.
+ */
+
+/**
+ * @typedef {function} TurboMultipleStreamActionFunction
+ *
+ * Function for sending multiple view templates, each getting
+ * wrapped in its own &lt;turbo-stream> tag.
+ *
+ * @param {string} view - Path to the view view to render inside
+ * the &lt;turbo-stream> tag.
+ * @param {object} variables - Variables to pass on to the view,
+ * in the same format as is done for req.render.
+ * @param {object} stream - Attributes to set in the &lt;turbo-stream>
+ * tag. Note that "action" here will be ignored, as it will be set
+ * by the function itself.
+ * @param {boolean} [onlyFormat=false] - If true, will wrap the response in
+ * a "res.format" object, so that the route will _only_ respond to
+ * the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.
+ */
+
+/**
+ * @typedef {object} turboStream middleware.
+ *
+ * Middleware which decorates the express response object with a
+ * "turboStream" object.
+ *
+ * @property {TurboSingleStreamActionFunction} append - Function to generate a
+ * turbo stream with the "append" action.
+ * @property {TurboSingleStreamActionFunction} prepend - Function to generate a
+ * turbo stream with the "prepend" action.
+ * @property {TurboSingleStreamActionFunction} replace - Function to generate a
+ * turbo stream with the "replace" action.
+ * @property {TurboSingleStreamActionFunction} update - Function to generate a
+ * turbo stream with the "update" action.
+ * @property {TurboMultipleStreamActionFunction} renderViews - Function to
+ * generate multiple turbo streams in a single response.
+ */
+
+/**
+ * Turbo stream middleware factory function.
+ *
+ * @param {string} mimeType - The mime type to check for in the
+ * HTTP Accept header, to detect the presence of a request made
+ * by the Turbo client, as well as the type to send in the
+ * Content-Type header, in response to such requests.
+ *
+ * @return {turboStream} Turbo stream middleware.
+ */
+const turboStream = (mimeType = MIME_TYPE) => (_req, res, next) => {
+  const render = promisify(res.render).bind(res);
+  const renderViewAsStream = renderViewAsStreamFactory(render);
+
+  async function renderViews(streams, onlyFormat = false) {
+    const compiledStreams = await Promise.all(
+      (streams || []).map(renderViewAsStream),
+    );
+    const output = compiledStreams.join('\n');
+    const result = await sendViewStream(res, output, onlyFormat, mimeType);
+    return result;
+  }
+
+  res.turboStream = ACTIONS.reduce((acc, action) => {
+    acc[action] = async function turboAction(view, variables, attr, onlyFormat = false) {
+      const stream = { ...(attr || {}), action };
+      try {
+        const output = await renderViewAsStream({ variables, view, stream });
+        const result = await sendViewStream(res, output, onlyFormat, mimeType);
+        return result;
+      } catch (error) {
+        return next(error);
+      }
+    };
+    return acc;
+  }, {});
+  res.turboStream.renderViews = renderViews.bind(res);
+  res.turboStream.mimeType = mimeType;
+
+  next();
+};
+
+export default turboStream;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jan 27 2021 22:17:18 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
