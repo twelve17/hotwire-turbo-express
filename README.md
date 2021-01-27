@@ -16,7 +16,7 @@ npm i hotwire-turbo-express
 
 # API
 
-See [docs](./docs/global.html)
+See [JSDoc](https://twelve17.github.io/hotwire-turbo-express/global.html)
 
 # Turbo Stream Protocol Notes
 
@@ -105,6 +105,14 @@ npm run example:start
 ```
 
 Browse to http://localhost:3000
+
+# Development
+
+## Publishing
+
+```
+npm run release
+```
 
 # 🎩 Tip To
 
