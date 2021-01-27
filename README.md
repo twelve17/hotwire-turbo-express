@@ -32,7 +32,7 @@ connectStreamSource(new EventSource('http://foo/bar');
 
 Once connected, messages with `<turbo-stream>`  HTML snippets will be processed by Turbo.
 
-There is an example using stimulus in the example app, at `src/controllers/stream-controller`.
+There is an example using stimulus in the example app, in [`src/controllers/stream-controller`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/src/controllers/stream-controller.mjs).
 
 ## Server-Side Events (SSE) Payload Format
 
@@ -48,7 +48,7 @@ Express response:
 res.write("data: <turbo-stream action='append'...>")
 ```
 
-See example in the `/item-actions/sse-stream` route in `example-app/app.mjs`.
+See example in the [`/item-actions/sse-stream`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/app.mjs#L88) route in `example-app/app.mjs`.
 
 ## WebSocket Payload Format
 
@@ -62,7 +62,7 @@ ws.on('open', async () => {
 });
 ```
 
-See example server at the bottom of `example-app/bin/www.mjs` and client in `example-app/add-list-item-ws.mjs`.
+See example server at the bottom of [`example-app/bin/www.mjs`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/bin/www.mjs#L97) and client in [`example-app/add-list-item-ws.mjs`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/bin/add-list-item-ws.mjs#L25).
 
 # TODO
 
