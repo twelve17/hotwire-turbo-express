@@ -3,24 +3,26 @@
   "version": "0.0.1",
   "description": "Hotwire Turbo ExpressJS backend",
   "type": "commonjs",
-  "main": "src/index.js",
+  "main": "dist/commonjs/index.js",
   "exports": {
     ".": {
-      "require": "./commonjs/index.js",
-      "default": "./esm/index.mjs",
-      "notAcceptable": "./esm/not-acceptable.mjs"
+      "require": "./dist/commonjs/index.js",
+      "default": "./dist/esm/index.mjs",
+      "notAcceptable": "./dist/esm/not-acceptable.mjs"
     }
   },
-  "module": "./esm/index.mjs",
+  "module": "./dist/esm/index.mjs",
   "scripts": {
     "build": "rm -fr dist && rollup -c && packito -n",
     "dev": "rollup -c  &&  cross-env NODE_ENV=development node ./dist",
     "lint": "eslint ./src/index.js",
     "prepublishOnly": "npm run build",
+    "publish": "npm publish ./dist",
     "test": "mocha  --experimental-specifier-resolution=node"
   },
   "files": [
-    "dist"
+    "commonjs",
+    "ejs"
   ],
   "repository": {
     "type": "git",

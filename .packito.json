@@ -6,7 +6,15 @@
     "esm": true
   },
   "replace": {
-    "main": "./commonjs/index.js"
+    "main": "commonjs/index.js",
+    "module": "esm/index.js",
+    "exports": {
+      ".": {
+        "require": "./commonjs/index.js",
+        "default": "./esm/index.mjs",
+        "notAcceptable": "./esm/not-acceptable.mjs"
+      }
+    }
   },
   "publisher": "np"
 }
