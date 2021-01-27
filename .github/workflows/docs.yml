@@ -1,7 +1,0 @@
-# https://github.com/andstor/jsdoc-action
-
-name: JSDoc
-  uses: andstor/jsdoc-action@v1
-  with:
-    config_file: ./jsdoc.conf.json
-
