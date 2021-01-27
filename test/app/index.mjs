@@ -6,7 +6,7 @@ import turboStream from '../../src/index';
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-export const createApp = (testCase) => {
+const createApp = (testCase) => {
   const app = express();
   app.set('views', path.join(dirname, 'views'));
   app.set('view engine', 'ejs');
@@ -26,3 +26,5 @@ export const createApp = (testCase) => {
 
   return app;
 };
+
+export default createApp;

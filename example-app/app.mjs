@@ -1,8 +1,8 @@
-import createError from 'http-errors';
 import express from 'express';
-import path from 'path';
+import createError from 'http-errors';
 import turboStream from 'hotwire-turbo-express';
 import multer from 'multer';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 import * as itemStore from './lib/data';
@@ -56,7 +56,7 @@ app.post('/item-list/page', upload.none(), async (req, res) => {
         action: 'append',
         target: 'item-list',
       },
-      variables: { items, cursor: nextCursor },
+      variables: { cursor: nextCursor, items },
       view: 'item-list/partials/item-list',
     },
     {
@@ -82,7 +82,6 @@ app.get('/item-actions', async (req, res) => {
 app.post('/item-actions/modify', upload.none(), async (req, res, next) => {
   const view = 'item-actions/partials/item-list';
   const stream = { target: 'item-list' };
-  let items;
 
   const listAction = req.body['list-action'];
   switch (listAction) {
@@ -94,15 +93,17 @@ app.post('/item-actions/modify', upload.none(), async (req, res, next) => {
     }
     case 'remove': {
       const { id } = req.body;
-      items = await itemStore.delete(parseInt(id, 10));
+      const items = await itemStore.delete(parseInt(id, 10));
       return res.turboStream.update(view, { items }, stream);
     }
-    case 'clear':
-      items = await itemStore.truncate();
+    case 'clear': {
+      const items = await itemStore.truncate();
       return res.turboStream.update(view, { items }, stream);
-    case 'reset':
-      items = await itemStore.seed();
+    }
+    case 'reset': {
+      const items = await itemStore.seed();
       return res.turboStream.update(view, { items }, stream);
+    }
     default:
       return next(new Error(`Unknown action ${listAction}`));
   }

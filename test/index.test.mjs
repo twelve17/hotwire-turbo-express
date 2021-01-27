@@ -1,7 +1,7 @@
 import assert from 'assert';
 import request from 'supertest';
 
-import { createApp } from './app';
+import createApp from './app';
 import { MIME_TYPE } from '../src/index';
 
 describe('turboStream', () => {

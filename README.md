@@ -1,5 +1,7 @@
 # hotwire-turbo-express
 
+![Node.js CI](https://github.com/twelve17/hotwire-turbo-express/workflows/Node.js%20CI/badge.svg)
+
 ExpressJS middleware for <a href="https://hotwire.dev/">hotwire</a> <a href="https://turbo.hotwire.dev/">Turbo</a> streams.
 
 # Requirements
@@ -42,17 +44,11 @@ See more examples in the example-app.
 
 # example-app
 
-## Setup
+## Setup and Run
 
 ```
-npm run build
-cd example-app
-npm i
-```
-
-## Running
-```
-npm run start
+npm run example:setup
+npm run example:start
 ```
 
 Browse to http://localhost:3000
