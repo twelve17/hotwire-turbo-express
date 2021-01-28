@@ -14,8 +14,8 @@ export default [
     input: 'src/index.mjs',
     external: ['escape-html', 'util'],
     output: [
-      { file: pkg.main, format: 'cjs', exports: 'named' },
-      { file: pkg.module, format: 'es', exports: 'named' },
+      { dir: path.join('dist', 'commonjs'), format: 'cjs', exports: 'named' },
+      { dir: path.join('dist', 'esm'), format: 'es', exports: 'named' },
     ],
     plugins: [
       copy({

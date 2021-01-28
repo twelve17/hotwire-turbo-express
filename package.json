@@ -3,16 +3,16 @@
   "version": "0.0.4",
   "description": "Hotwire Turbo ExpressJS backend",
   "type": "commonjs",
-  "main": "dist/commonjs/index.js",
+  "main": "commonjs/index.js",
   "exports": {
     ".": {
-      "require": "./dist/commonjs/index.js",
-      "default": "./dist/esm/index.mjs",
-      "notAcceptable": "./dist/esm/not-acceptable.mjs",
-      "buildStreamFragment": "./dist/esm/index.mjs"
+      "require": "./commonjs/index.js",
+      "default": "./esm/index.js",
+      "notAcceptable": "./esm/not-acceptable.js",
+      "buildStreamFragment": "./esm/index.js"
     }
   },
-  "module": "./dist/esm/index.mjs",
+  "module": "./esm/index.js",
   "scripts": {
     "build": "rm -fr dist && rollup -c && packito -n",
     "docs": "rm -fr docs/* && jsdoc -c jsdoc.conf.json",
@@ -26,7 +26,8 @@
   },
   "files": [
     "commonjs",
-    "ejs"
+    "docs",
+    "esm"
   ],
   "repository": {
     "type": "git",
