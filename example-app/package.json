@@ -16,7 +16,8 @@
   "nodemonConfig": {
     "exec": "node --experimental-specifier-resolution=node",
     "ignore": [
-      "tmp/*"
+      "tmp/*",
+      "public/*"
     ]
   },
   "stylelint": {

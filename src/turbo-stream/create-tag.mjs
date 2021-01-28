@@ -8,7 +8,7 @@ const createTag = (attributes, content, singleLine = false) => {
     </template>
   </turbo-stream>
 `;
-  return singleLine ? tag.replace(/\n/g, '') : tag;
+  return singleLine ? tag.replace(/\n/g, '').trim() : tag;
 };
 
 export default createTag;
