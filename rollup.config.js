@@ -21,6 +21,7 @@ export default [
       copy({
         targets: [
           { src: 'docs', dest: 'dist/' },
+          { src: 'README.md', dest: 'dist/' },
         ],
       }),
     ],
