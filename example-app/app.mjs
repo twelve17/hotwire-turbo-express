@@ -1,5 +1,7 @@
 import express from 'express';
 import createError from 'http-errors';
+import EventEmitter from 'events';
+import sse from 'server-sent-events';
 import turboStream, { buildStreamTag } from 'hotwire-turbo-express';
 import multer from 'multer';
 import path from 'path';
@@ -9,6 +11,8 @@ import * as itemStore from './lib/data';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+
+const itemActionsStream = new EventEmitter();
 
 // set up our faux database of items
 itemStore.seed();
@@ -85,55 +89,9 @@ app.get('/item-actions', async (req, res) => {
  * This is a dumb example which causes the originating client to
  * end up with duplicated new entries.
  */
-app.get('/item-actions/sse-stream', async (req, res) => {
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    Connection: 'keep-alive',
-  });
-
-  let cursor = req.query.cursor ? parseInt(req.query.cursor, 10) + 1 : 0;
-  const view = 'item-actions/partials/item-list';
-  const stream = { target: 'item-list', action: 'append' };
-
-  const sleepSecs = 1;
-  const maxLoops = 1000;
-  let loopCount = 0;
-
-  const intervalId = setInterval(async () => {
-    loopCount += 1;
-    if (loopCount > maxLoops) {
-      clearInterval(intervalId);
-      res.end();
-      return;
-    }
-    const { items, nextCursor } = await itemStore.list(cursor);
-
-    if (items.length === 0) return;
-
-    const tags = items.reduce((acc, item) => {
-      res.render(view, { items: [item] }, (err, html) => {
-        if (err) {
-          // eslint-disable-next-line no-console
-          console.error('error rendering view:', err.message);
-        } else {
-          const tag = buildStreamTag(stream, html);
-          acc.push(tag);
-        }
-      });
-      return acc;
-    }, []);
-    const message = `data: ${tags.join('\n').replace(/\n/g, '')}\n\n`;
-    res.write(message);
-    if (nextCursor) cursor = nextCursor;
-  }, sleepSecs * 1000);
-
-  // If client closes connection, stop sending events
-  res.on('close', () => {
-    // eslint-disable-next-line no-console
-    console.log('SSE client disconnected');
-    clearInterval(intervalId);
-    res.end();
+app.get('/item-actions/sse-stream', sse, async (req, res) => {
+  itemActionsStream.on('push', (event, data) => {
+    res.sse(`event: ${String(event)}\ndata: ${data}\n\n`);
   });
 });
 
@@ -144,6 +102,8 @@ app.get('/item-actions/sse-stream', async (req, res) => {
 app.post('/item-actions/modify', upload.none(), async (req, res, next) => {
   const view = 'item-actions/partials/item-list';
   const stream = { target: 'item-list' };
+  const responseType = req.body['response-type'];
+  const sendStream = responseType !== 'none';
 
   const listAction = req.body['list-action'];
   switch (listAction) {
@@ -151,20 +111,32 @@ app.post('/item-actions/modify', upload.none(), async (req, res, next) => {
       // since the turbo action is "append", we only send the new item,
       // not the whole list of items
       const newItem = await itemStore.add();
-      return res.turboStream.append(view, { items: [newItem] }, stream);
+      if (sendStream) {
+        return res.turboStream.append(view, { items: [newItem] }, stream);
+      }
+      return res.sendStatus(200);
     }
     case 'remove': {
       const { id } = req.body;
       const items = await itemStore.delete(parseInt(id, 10));
-      return res.turboStream.update(view, { items }, stream);
+      if (sendStream) {
+        return res.turboStream.update(view, { items }, stream);
+      }
+      return res.sendStatus(200);
     }
     case 'clear': {
       const items = await itemStore.truncate();
-      return res.turboStream.update(view, { items }, stream);
+      if (sendStream) {
+        return res.turboStream.update(view, { items }, stream);
+      }
+      return res.sendStatus(200);
     }
     case 'reset': {
       const items = await itemStore.seed();
-      return res.turboStream.update(view, { items }, stream);
+      if (sendStream) {
+        return res.turboStream.update(view, { items }, stream);
+      }
+      return res.sendStatus(200);
     }
     default:
       return next(new Error(`Unknown action ${listAction}`));

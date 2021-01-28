@@ -1,53 +1,27 @@
-import escape from 'escape-html';
 import { promisify } from 'util';
-import { notAcceptable } from './not-acceptable';
+import { sendStream } from './send-stream';
+import TurboStream from './turbo-stream';
 
 export const MIME_TYPE = 'text/vnd.turbo-stream.html';
 
-const ACTIONS = ['append', 'prepend', 'replace', 'update'];
-
-const buildAttributes = (attributes) => Object.keys(attributes || {})
-  .map((name) => [name, `"${escape(attributes[name])}"`].join('='))
-  .join(' ');
-
-export const buildStreamTag = (attributes, content) => `
-  <turbo-stream ${buildAttributes(attributes)}>
-    <template>
-      ${content}
-    </template>
-  </turbo-stream>
-`;
-
-const renderViewAsStreamFactory = (renderDelegate) => async (streamSpec) => {
-  const { view, variables, stream } = streamSpec;
-  const renderedView = await renderDelegate(view, variables);
-  return buildStreamTag(stream, renderedView);
-};
-
-export function sendViewStream(res, body, onlyFormat, mimeType = MIME_TYPE) {
-  if (onlyFormat) {
-    return res.format({
-      [mimeType]: function turboStreamResponse() {
-        return res.send(body);
-      },
-      default: notAcceptable.bind(res),
-    });
-  }
-  return res.type(mimeType).send(body);
-}
+export const ACTIONS = ['append', 'prepend', 'replace', 'update'];
 
 /**
- * @typedef {object} StreamSpec
+ * @typedef {object} TurboStreamSpec
+ *
+ * Object with necessary properties to render a view with optional variables
+ * and wrap it in a <turbo-stream> tag.
+ *
  * @property {object} stream - Attributes to set in the <turbo-stream>
  * tag.
- * @param {string} view - Path to the view view to render inside
+ * @property {string} view - Path to the view to render inside
  * the <turbo-stream> tag.
- * @param {object} variables - Variables to pass on to the view,
+ * @property {object} [variables] - Variables to pass on to the view,
  * in the same format as is done for req.render.
  *
  * @example
  * <pre>
- * res.turboStream.renderViews(
+ * res.turboStream.compileViews(
  *  [
  *    {
  *      stream: {
@@ -73,56 +47,6 @@ export function sendViewStream(res, body, onlyFormat, mimeType = MIME_TYPE) {
  */
 
 /**
- * @typedef {function} TurboSingleStreamActionFunction
- *
- * Function which will render a response with the a given
- * template and variables, wrapped in a <turbo-stream> tag.
- *
- streams, onlyFormat = false
-
- * @param {Array<StreamSpec>} streams - Array of stream specifications.
- * @param {boolean} [onlyFormat=false] - If true, will wrap the response in
- * a "res.format" object, so that the route will _only_ respond to
- * the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.
- */
-
-/**
- * @typedef {function} TurboMultipleStreamActionFunction
- *
- * Function for sending multiple view templates, each getting
- * wrapped in its own <turbo-stream> tag.
- *
- * @param {string} view - Path to the view view to render inside
- * the <turbo-stream> tag.
- * @param {object} variables - Variables to pass on to the view,
- * in the same format as is done for req.render.
- * @param {object} stream - Attributes to set in the <turbo-stream>
- * tag. Note that "action" here will be ignored, as it will be set
- * by the function itself.
- * @param {boolean} [onlyFormat=false] - If true, will wrap the response in
- * a "res.format" object, so that the route will _only_ respond to
- * the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.
- */
-
-/**
- * @typedef {object} turboStream middleware.
- *
- * Middleware which decorates the express response object with a
- * "turboStream" object.
- *
- * @property {TurboSingleStreamActionFunction} append - Function to generate a
- * turbo stream with the "append" action.
- * @property {TurboSingleStreamActionFunction} prepend - Function to generate a
- * turbo stream with the "prepend" action.
- * @property {TurboSingleStreamActionFunction} replace - Function to generate a
- * turbo stream with the "replace" action.
- * @property {TurboSingleStreamActionFunction} update - Function to generate a
- * turbo stream with the "update" action.
- * @property {TurboMultipleStreamActionFunction} renderViews - Function to
- * generate multiple turbo streams in a single response.
- */
-
-/**
  * Turbo stream middleware factory function.
  *
  * @param {string} mimeType - The mime type to check for in the
@@ -132,34 +56,118 @@ export function sendViewStream(res, body, onlyFormat, mimeType = MIME_TYPE) {
  *
  * @return {turboStream} Turbo stream middleware.
  */
-const turboStream = (mimeType = MIME_TYPE) => (_req, res, next) => {
-  const render = promisify(res.render).bind(res);
-  const renderViewAsStream = renderViewAsStreamFactory(render);
+const turboStream = (mimeType = MIME_TYPE, promiseRender) => (_req, res, next) => {
+  const render = promiseRender || promisify(res.render).bind(res);
 
-  async function renderViews(streams, onlyFormat = false) {
-    const compiledStreams = await Promise.all(
-      (streams || []).map(renderViewAsStream),
-    );
-    const output = compiledStreams.join('\n');
-    const result = await sendViewStream(res, output, onlyFormat, mimeType);
-    return result;
+  /**
+  * @typedef {function} compileView
+  *
+  * Function for compiling a single view template into a turbo-stream
+  * HTML snippet.
+  *
+  * @param {TurboStreamSpec} spec - an object conforming to TurboStreamSpec type.
+  *
+  * @return {String} - HTML containing a the rendered view, wrapped in
+  * a <turbo-stream> tag,
+  */
+  const compileView = async ({ stream, view, variables }) => {
+    if (!stream) throw new Error('compileView: missing stream');
+    if (!view) throw new Error('compileView: missing view');
+    const compiledView = await render(view, variables);
+    return new TurboStream(stream, compiledView).toHtml();
+  };
+
+  /**
+  * @typedef {function} compileViews
+  *
+  * Function for compiling multiple view templates into turbo-streams
+  *
+  * @param {Array<TurboStreamSpec>} specs - an object conforming to TurboStreamSpec type.
+  *
+  * @return {String} - HTML containing a set of <turbo-stream> tags,
+  * each wrapping one of the views provided. Tags are separated by a
+  * newline (\n).
+  */
+  const compileViews = async (specs) => {
+    const compiledViews = await Promise.all((specs || []).map(compileView));
+    return compiledViews.join('\n');
+  };
+
+  async function renderViews(specs, onlyFormat) {
+    try {
+      const html = await compileViews(specs);
+      return sendStream(this, html, onlyFormat, mimeType);
+    } catch (error) {
+      return next(error);
+    }
   }
 
-  res.turboStream = ACTIONS.reduce((acc, action) => {
-    acc[action] = async function turboAction(view, variables, attr, onlyFormat = false) {
-      const stream = { ...(attr || {}), action };
-      try {
-        const output = await renderViewAsStream({ variables, view, stream });
-        const result = await sendViewStream(res, output, onlyFormat, mimeType);
-        return result;
-      } catch (error) {
-        return next(error);
-      }
+  async function renderView(spec, onlyFormat) {
+    try {
+      const html = await compileView(spec);
+      const result = await sendStream(res, html, onlyFormat, mimeType);
+      return result;
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+  * @typedef {function} renderActionView
+  *
+  * Function which will render a response with the a given
+  * template and variables, wrapped in a <turbo-stream> tag.
+  *
+  streams, onlyFormat = false
+
+  * @param {Array<TurboStreamSpec>} streams - Array of stream specifications.
+  * @param {boolean} [onlyFormat=false] - If true, will wrap the response in
+  * a "res.format" object, so that the route will _only_ respond to
+  * the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.
+  */
+  async function renderActionView({ action, onlyFormat = false, spec }) {
+    const stream = { ...(spec.stream || {}), action };
+    return renderView({ ...spec, stream }, onlyFormat);
+  }
+
+  const actionFunctions = ACTIONS.reduce((acc, action) => {
+    acc[action] = async function turboAction(view, variables, stream, onlyFormat) {
+      if (!stream) throw new Error(`turboStream.${action}: missing stream attributes.`);
+      const spec = { view, variables, stream };
+      return renderActionView({ action, onlyFormat, spec });
     };
     return acc;
   }, {});
-  res.turboStream.renderViews = renderViews.bind(res);
-  res.turboStream.mimeType = mimeType;
+
+  /**
+  * @typedef {object} turboStream middleware.
+  *
+  * Middleware which decorates the express response object with a
+  * "turboStream" object, with the following properties:
+  *
+  * @property {renderActionView} append - Function to generate a
+  * turbo stream with the "append" action.
+  * @property {renderActionView} prepend - Function to generate a
+  * turbo stream with the "prepend" action.
+  * @property {renderActionView} replace - Function to generate a
+  * turbo stream with the "replace" action.
+  * @property {renderActionView} update - Function to generate a
+  * turbo stream with the "update" action.
+  * @property {compiledView} compileView - See compileView jsdoc.
+  * @property {compiledViews} compileViews - See compileViews jsdoc.
+  * @property {sendStream} sendStream - See sendStream jsdoc.
+  * @property {class} TurboStream- See TurboStream jsdoc.
+  */
+  res.turboStream = {
+    mimeType,
+    compileView,
+    compileViews,
+    renderView: renderView.bind(res),
+    renderViews: renderViews.bind(res),
+    sendStream,
+    TurboStream,
+    ...actionFunctions,
+  };
 
   next();
 };
