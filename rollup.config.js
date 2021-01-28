@@ -15,7 +15,7 @@ export default [
     external: ['escape-html', 'util'],
     output: [
       { dir: path.join('dist', 'commonjs'), format: 'cjs', exports: 'named' },
-      { dir: path.join('dist', 'esm'), format: 'es', exports: 'named' },
+      { file: path.join('dist', 'esm', 'index.mjs'), format: 'es', exports: 'named' },
     ],
     plugins: [
       copy({
@@ -32,7 +32,7 @@ export default [
     input: 'src/not-acceptable.mjs',
     output: [
       { dir: path.join('dist', 'commonjs'), format: 'cjs' },
-      { dir: path.join('dist', 'esm'), format: 'es' },
+      { file: path.join('dist', 'esm', 'not-acceptable.mjs'), format: 'es' },
     ],
   },
 ];

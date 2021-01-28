@@ -7,12 +7,12 @@
   "exports": {
     ".": {
       "require": "./commonjs/index.js",
-      "default": "./esm/index.js",
-      "notAcceptable": "./esm/not-acceptable.js",
-      "buildStreamFragment": "./esm/index.js"
+      "default": "./esm/index.mjs",
+      "notAcceptable": "./esm/not-acceptable.mjs",
+      "buildStreamFragment": "./esm/index.mjs"
     }
   },
-  "module": "./esm/index.js",
+  "module": "./esm/index.mjs",
   "scripts": {
     "build": "rm -fr dist && rollup -c && packito -n",
     "docs": "rm -fr docs/* && jsdoc -c jsdoc.conf.json",

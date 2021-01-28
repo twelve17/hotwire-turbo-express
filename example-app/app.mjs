@@ -49,7 +49,7 @@ app.get('/item-list', async (req, res) => {
  * elements and with different actions.
  */
 app.post('/item-list/page', upload.none(), async (req, res) => {
-  const { hasMore, items, nextCursor } = await itemStore.list(req.body.cursor);
+  const { hasMore, items, nextCursor } = await itemStore.list(parseInt(req.body.cursor, 10));
   return res.turboStream.renderViews([
     {
       stream: {
