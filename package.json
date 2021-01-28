@@ -14,14 +14,14 @@
   },
   "module": "./dist/esm/index.mjs",
   "scripts": {
-    "build": "npm run lint && npm run test && rm -fr dist && rollup -c && packito -n",
-    "docs": "jsdoc -c jsdoc.conf.json",
+    "build": "rm -fr dist && rollup -c && packito -n",
+    "docs": "rm -fr docs/* && jsdoc -c jsdoc.conf.json",
     "example:lint": "cd example-app && npm run lint",
     "example:setup": "npm run build && cd example-app && npm i",
     "example:start": "cd example-app && npm run start",
     "lint": "eslint --ext mjs .",
-    "prerelease": "npm run build && npm run docs",
-    "release": "np",
+    "prerelease": "npm run lint && npm run test && npm run docs && npm run build",
+    "release": "np && packito && npm publish ./dist",
     "test": "mocha  --experimental-specifier-resolution=node"
   },
   "files": [
@@ -59,6 +59,7 @@
     "np": "^7.2.0",
     "packito": "^0.5.0",
     "rollup": "^2.38.0",
+    "rollup-plugin-copy": "^3.3.0",
     "supertest": "^6.1.3"
   }
 }

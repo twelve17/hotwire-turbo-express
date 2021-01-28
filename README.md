@@ -114,6 +114,9 @@ Browse to http://localhost:3000
 npm run release
 ```
 
+Seems that `np`'s `contents` flag [does not work how I expected](https://github.com/sindresorhus/np/issues/551#issuecomment-768661956), and `packito` [seems to not have publishing working yet](https://github.com/mikbry/packito/issues/29),
+so the relase will run both `packito` and `np` without publishing, then delegate to `npm publish ./dist`.
+
 # 🎩 Tip To
 
 - [NPM building](https://mikbry.com/blog/javascript/npm/best-practices-npm-package) with [packito](https://github.com/mikbry/packito)

@@ -1,4 +1,5 @@
 import path from 'path';
+import copy from 'rollup-plugin-copy';
 import pkg from './package.json';
 
 // https://github.com/rollup/rollup-starter-lib
@@ -16,7 +17,16 @@ export default [
       { file: pkg.main, format: 'cjs', exports: 'named' },
       { file: pkg.module, format: 'es', exports: 'named' },
     ],
+    plugins: [
+      copy({
+        targets: [
+          { src: 'docs', dest: 'dist/' },
+        ],
+      }),
+    ],
+
   },
+
   {
     input: 'src/not-acceptable.mjs',
     output: [
