@@ -166,11 +166,11 @@ The example app has complete implementations showing how to use this library to 
 
 - Action initiated in one browser is reflected in other browsers connected via SSE/WebSocket:
 
-  ![Example App Screen Recording][https://github.com/twelve17/hotwire-turbo-express/blob/main/images/example-app-ws-example.gif]
+  ![Example App Screen Recording][example-app-ws-example.gif]
 
 - Action initiated from an external source, in this case a CLI tool that sends a message via WebSocket, is reflected in browsers connected to the same WebSocket endpoint:
 
-  ![Example App Screen Recording 2][https://github.com/twelve17/hotwire-turbo-express/blob/main/images/example-app-ws-example-cli.gif]
+  ![Example App Screen Recording 2][example-app-ws-example-cli.gif]
 
 ## Setup and Run
 
