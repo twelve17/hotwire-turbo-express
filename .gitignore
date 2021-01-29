@@ -1,10 +1,13 @@
 docs
 example-app/node_modules
-example-app/hotwire-turbo-express
+example-app/public/js
 example-app/tmp
 
 *.sw*
 **/.vscode
+
+# MacOS
+.DS_Store
 
 # Logs
 logs

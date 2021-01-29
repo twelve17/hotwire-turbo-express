@@ -1,0 +1,32 @@
+name: JSDoc
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+    - 'README.md'
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: 14.x
+    - run: npm ci
+    - name: Build JSDoc
+      uses: andstor/jsdoc-action@v1
+      with:
+        config_file: jsdoc.conf.json
+    - name: Deploy JSDoc
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: ./docs
+
+
+

@@ -6,14 +6,14 @@ import TurboStream from './turbo-stream/index';
 /**
  * @typedef {object} TurboStreamSpec
  *
- * Object with necessary properties to render a view with optional variables
+ * Object with necessary properties to render a view with optional locals
  * and wrap it in a <turbo-stream> tag.
  *
  * @property {object} stream - Attributes to set in the <turbo-stream>
  * tag.
  * @property {string} view - Path to the view to render inside
  * the <turbo-stream> tag.
- * @property {object} [variables] - Variables to pass on to the view,
+ * @property {object} [locals] - locals to pass on to the view,
  * in the same format as is done for req.render.
  */
 
@@ -41,10 +41,10 @@ const turboStream = (mimeType = MIME_TYPE, promiseRender) => (_req, res, next) =
   * @return {String} - HTML containing a the rendered view, wrapped in
   * a <turbo-stream> tag,
   */
-  const compileView = async ({ stream, view, variables }) => {
+  const compileView = async ({ stream, view, locals }) => {
     if (!stream) throw new Error('compileView: missing stream');
     if (!view) throw new Error('compileView: missing view');
-    const compiledView = await render(view, variables);
+    const compiledView = await render(view, locals);
     return new TurboStream(stream, compiledView).toHtml();
   };
 
@@ -68,7 +68,7 @@ const turboStream = (mimeType = MIME_TYPE, promiseRender) => (_req, res, next) =
   *        action: 'append',
   *        target: 'item-list',
   *      },
-  *      variables: { items, cursor: nextCursor },
+  *      locals: { items, cursor: nextCursor },
   *      view: 'item-list/partials/item-list',
   *    },
   *    {
@@ -76,7 +76,7 @@ const turboStream = (mimeType = MIME_TYPE, promiseRender) => (_req, res, next) =
   *        action: 'replace',
   *        target: 'item-list-more-button',
   *      },
-  *      variables: { cursor: nextCursor, hasMore },
+  *      locals: { cursor: nextCursor, hasMore },
   *      view: 'item-list/partials/item-list-more-button',
   *    },
   *   ],
@@ -128,20 +128,20 @@ const turboStream = (mimeType = MIME_TYPE, promiseRender) => (_req, res, next) =
     * @typedef {function} turboAction
     *
     * Function which will render a response with the a given
-    * template and variables, wrapped in a <turbo-stream> tag.
+    * template and locals, wrapped in a <turbo-stream> tag.
     *
     * @param {string} view - Path to the view to render inside
     * the <turbo-stream> tag.
-    * @param {object} [variables] - Variables to pass on to the view,
+    * @param {object} [locals] - locals to pass on to the view,
     * in the same format as is done for req.render.
     * @param {object} stream - Attributes to set in the <turbo-stream> tag.
     * @param {boolean} [onlyFormat=false] - If true, will wrap the response in
     * a "res.format" object, so that the route will _only_ respond to
     * the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.
     */
-    async function turboAction(view, variables, stream, onlyFormat) {
+    async function turboAction(view, locals, stream, onlyFormat) {
       if (!stream) throw new Error(`turboStream.${action}: missing stream attributes.`);
-      const spec = { view, variables, stream };
+      const spec = { view, locals, stream };
       return renderActionView({ action, onlyFormat, spec });
     }
     acc[action] = turboAction;

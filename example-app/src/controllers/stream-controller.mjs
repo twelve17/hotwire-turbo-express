@@ -18,9 +18,9 @@ export default class extends Controller {
         console.log('WS: got message:', message);
       };
     } else {
-      // server-side events (SSE, not WebSocket) endpoint
+      // server sent events (SSE, not WebSocket) endpoint
       this.es = new EventSource(url);
-      console.log('Established server-side event (SSE) stream source at url:', url);
+      console.log('Established server sent event (SSE) stream source at url:', url);
 
       this.es.onmessage = function handleMessage(event) {
         console.log('SSE: got message:', event.data);
