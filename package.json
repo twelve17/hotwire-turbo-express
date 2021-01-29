@@ -15,7 +15,7 @@
     "example:setup": "npm run build && cd example-app && npm i",
     "example:start": "cd example-app && npm run start",
     "lint": "eslint --ext mjs .",
-    "prerelease": "npm run lint && npm run test && npm run docs && npm run build",
+    "prerelease": "npm run lint && npm run docs && npm run build",
     "release": "np && packito && npm publish ./dist",
     "test": "mocha  --experimental-specifier-resolution=node"
   },
