@@ -2,9 +2,10 @@
   <h4>
     Item ID: <%= item.id %>
   </h4>
-
-  <form action="/item-actions/modify" method="post">
+  <form action="/items/actions/<%= mode %>/modify" method="post">
     <input type="hidden" name="id" value="<%= item.id %>" />
-    <button name="list-action" value="remove">Remove Item</button>
+    <input type="hidden" name="mode" value="<%= mode %>" />
+    <input type="hidden" name="list-action" value="remove" />
+    <button type="submit">Remove Item</button>
   </form>
 </div>

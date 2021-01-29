@@ -1,0 +1,31 @@
+<p>
+  In this mode, the <code>item-list</code> div has a relative URL path set in its <code>data-stream-source</code>
+  attribute, pointing to the server route <code>/items/actions/stream</code>. This signals to the attached
+  <code>StreamController</code> that it is a URL to an endpoint that will return
+  a SSE stream.
+</p>
+
+<ol>
+  <li>
+    When the controller is <code>connect</code>ed, the SSE connection will be made to the server, and linked to
+    <code>Turbo</code>, and <code>Turbo</code> will begin watching that connection for HTML snippets that have
+    <code>turbo-stream</code> tags.
+  </li>
+  <li>
+    Tapping on any of the buttons submits a form to <code>/items/actions/plain/modify</code> with
+    <code>mode=<%=mode%></code>.
+    This causes the server route to <b>omit</b> returning anything in the response after performing the CRUD operation.
+    Instead, it will send a message to a configured EventEmitter with the updated item(s).
+  </li>
+  <li>
+    The <code>/items/actions/stream</code>route watches the above EventEmitter, so it will receive the message with the
+    updated item(s), serialize them into a <code>turbo-stream</code> HTML snippet, and send it to this and any other
+    clients connected to the SSE route.
+  </li>
+</ol>
+
+<p>Try this example with several browser instances pointing to this <code><%= mode %></code> version of the page.</p>
+
+<p>
+  The <a href="/items/actions/websocket">WebSocket</a> versions of this example is almost identical to this example.
+</p>

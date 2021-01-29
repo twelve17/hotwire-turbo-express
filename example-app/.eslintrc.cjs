@@ -2,8 +2,7 @@ module.exports = {
   plugins: ['mocha'],
   root: true,
   env: {
-    browser: false,
-    es2021: true,
+    node: true,
   },
   extends: [
     'airbnb-base',
@@ -12,18 +11,19 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  ignorePatterns: ['public/**', '*.ejs'],
+  ignorePatterns: ['public/**', '*.ejs', 'tmp'],
   rules: {
     'import/prefer-default-export': 'off',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   },
   overrides: [
     {
-      files: ['routes/**/*.mjs', 'views/**/*.ejs'],
+      files: ['views/**/*.ejs'],
       rules: {
         'no-underscore-dangle': 'off',
       },
     },
+    // browser
     {
       files: ['src/**/*.mjs'],
       env: {

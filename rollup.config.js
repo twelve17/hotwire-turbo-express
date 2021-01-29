@@ -1,6 +1,22 @@
 import path from 'path';
 import copy from 'rollup-plugin-copy';
-import pkg from './package.json';
+
+const esmEntry = (paths, opts) => (
+  {
+    file: path.join('dist', 'esm', ...(paths || [])),
+    format: 'es',
+    ...(opts || {}),
+  }
+);
+
+const commonJsEntry = (paths, opts) => {
+  console.log('paths', paths, 'opts', opts);
+  return {
+    dir: path.join('dist', 'commonjs', ...(paths || [])),
+    format: 'cjs',
+    ...(opts || {}),
+  };
+};
 
 // https://github.com/rollup/rollup-starter-lib
 export default [
@@ -12,7 +28,7 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.mjs',
-    external: ['escape-html', 'util'],
+    external: ['util'],
     output: [
       { dir: path.join('dist', 'commonjs'), format: 'cjs', exports: 'named' },
       { file: path.join('dist', 'esm', 'index.mjs'), format: 'es', exports: 'named' },
@@ -25,14 +41,30 @@ export default [
         ],
       }),
     ],
-
   },
-
+  /*
   {
     input: 'src/not-acceptable.mjs',
     output: [
-      { dir: path.join('dist', 'commonjs'), format: 'cjs' },
-      { file: path.join('dist', 'esm', 'not-acceptable.mjs'), format: 'es' },
+      commonJsEntry(),
+      esmEntry(['not-acceptable.mjs']),
     ],
   },
+  {
+    input: 'src/turbo-stream/index.mjs',
+    output: [
+      commonJsEntry(['turbo-stream'], { exports: 'default' }),
+      esmEntry(['turbo-stream', 'index.mjs'], { exports: 'default' }),
+    ],
+    external: ['escape-html'],
+  },
+  {
+    input: 'src/turbo-stream/create-tag.mjs',
+    output: [
+      commonJsEntry(['turbo-stream'], { exports: 'default' }),
+      esmEntry(['turbo-stream', 'create-tag.mjs']),
+    ],
+    external: ['escape-html'],
+  },
+  */
 ];

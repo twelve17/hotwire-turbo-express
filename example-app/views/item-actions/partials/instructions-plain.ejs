@@ -1,0 +1,27 @@
+<p>
+  In this mode, the Stimulus controller is unused.
+</p>
+
+<ol>
+  <li>
+    Tapping on any of the buttons submits a form to <code>/items/actions/plain/modify</code> with
+    <code>mode=<%=mode%></code>.
+  </li>
+  <li>
+    The route will perform the CRUD operation, and, because of the <code>mode=<%=mode%></code> parameter passed to it,
+    it will then return a HTTP response with <code>Content-Type: text/vnd.turbo-stream.html</code>, with the
+    <code>turbo-stream</code> tag containing the HTML to either <code>append</code> or <code>update</code> the
+    <code>item-list</code> div.
+  </li>
+</ol>
+
+<p>
+  The limitation with this approach is that other browsers that have pulled up this list will need to refresh the page
+  in order to see the changes.
+</p>
+
+<p>
+  Check out the
+  <a href="/items/actions/sse">SSE</a> or <a href="/items/actions/websocket">WebSocket</a> versions of this example to
+  see how changes done by one client can be reflected in other clients.
+</p>

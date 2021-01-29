@@ -2,15 +2,10 @@
   "name": "hotwire-turbo-express",
   "version": "0.0.6",
   "description": "Hotwire Turbo ExpressJS backend",
-  "type": "commonjs",
+  "type": "module",
   "main": "commonjs/index.js",
   "exports": {
-    ".": {
-      "require": "./commonjs/index.js",
-      "default": "./esm/index.mjs",
-      "notAcceptable": "./esm/not-acceptable.mjs",
-      "buildStreamFragment": "./esm/index.mjs"
-    }
+    ".": "./esm/index.mjs"
   },
   "module": "./esm/index.mjs",
   "scripts": {

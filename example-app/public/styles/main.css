@@ -38,9 +38,10 @@ code {
 .note {
   border: 1px solid #a6a6ad;
   background-color: #ddf0ff;
-  font-style: italic;
   font-size: 14px;
-  max-width: 600px;
-  padding: 10px;
+  max-width: 900px;
+  margin: 10px 0;
+  padding: 0 10px;
   color: #191919;
+  line-height: 20px;
 }

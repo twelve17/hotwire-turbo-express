@@ -2,7 +2,7 @@ import assert from 'assert';
 import request from 'supertest';
 
 import createApp from './app';
-import { MIME_TYPE } from '../src/index';
+import { ACTIONS, MIME_TYPE } from '../src/constants';
 
 describe('turboStream', () => {
   const ACCEPT_HEADERS = {
@@ -81,7 +81,7 @@ describe('turboStream', () => {
     });
   });
 
-  ['append', 'prepend', 'replace', 'update'].forEach((action) => {
+  ACTIONS.forEach((action) => {
     describe(`#${action}()`, () => {
       describe('with view variables', () => {
         const view = 'partials/greeting';

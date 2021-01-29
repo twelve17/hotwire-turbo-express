@@ -2,10 +2,28 @@
 
   <h2>Stream Actions Example</h2>
 
+  <h3>Mode:
+    <% ['plain', 'sse' , 'websocket' ].map((availMode, i)=> { %>
+      <% if (mode===availMode) { _%>
+        <%= mode %>
+          <% } else { _%>
+            <a style="display: inline-block" href="/items/actions/<%= availMode _%>">
+              <%= availMode _%>
+            </a>
+            <% } -%>
+              <% if (i < 2 ) { %>|<% } _%>
+                  <% }) _%>
+  </h3>
+
+  <div class="note">
+    <p>This list of items is inside of a div with a <code>data-controller="stream"</code> attribute, which connects it
+      to the <code>StreamController</code></p>
+    <%- include(`partials/instructions-${mode}`) %>
+  </div>
+
   <%- include('partials/action-buttons') %>
 
-    <div id="item-list" data-controller="stream"
-      data-sse-source-disabled="/item-actions/sse-stream?cursor=<%= cursor %>" data-ws-source="ws://localhost:3000">
+    <div id="item-list" data-controller="stream" data-stream-source="<%= streamSource %>">
       <% for (const item of items) { %>
         <%- include('partials/item-row', { item }) %>
           <% } %>
