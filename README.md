@@ -4,6 +4,9 @@
 
 ExpressJS middleware for sending turbo-stream HTML fragments to a <a href="https://hotwire.dev/">hotwire</a> <a href="https://turbo.hotwire.dev/">Turbo</a> client. It aims to perform a subset of functionality that <a href="https://github.com/hotwired/turbo-rails">turbo-rails provides</a> with <a href="https://docs.ruby-lang.org/en/2.3.0/ERB.html">ERB templates</a>, but with <a href="https://ejs.co">EJS</a> templates.
 
+
+![Example App Screen Recording](images/example-app-ws-example.gif)
+
 ## Requirements
 
 - Node 14.x or newer
@@ -166,11 +169,11 @@ The example app has complete implementations showing how to use this library to 
 
 - Action initiated in one browser is reflected in other browsers connected via SSE/WebSocket:
 
-  ![Example App Screen Recording][https://github.com/twelve17/hotwire-turbo-express/blob/main/images/example-app-ws-example.gif]
+  ![Example App Screen Recording](images/example-app-ws-example.gif)
 
 - Action initiated from an external source, in this case a CLI tool that sends a message via WebSocket, is reflected in browsers connected to the same WebSocket endpoint:
 
-  ![Example App Screen Recording 2][https://github.com/twelve17/hotwire-turbo-express/blob/main/images/example-app-ws-example-cli.gif]
+  ![Example App Screen Recording 2](images/example-app-ws-example-cli.gif)
 
 ## Setup and Run
 
