@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	"yarn": false,
 	"branch": "main",
 	"contents": "dist",
