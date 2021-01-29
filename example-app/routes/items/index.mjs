@@ -48,14 +48,14 @@ const routerFactory = () => {
   });
 
   router.param('mode', async (req, res, next, mode) => {
-    res.locals.mode = mode;
+    res.locals.mode = STREAM_SOURCES[mode] ? mode : 'plain';
     next();
   });
 
   router.get('/actions/:mode', async (req, res) => {
     const items = await itemStore.load();
     const cursor = items.reduce((acc, i) => ((i.id > acc) ? i.id : acc), 0);
-    const mode = req.params.mode || 'plain';
+    const { mode } = res.locals;
 
     return res.render('item-actions/index', {
       cursor,

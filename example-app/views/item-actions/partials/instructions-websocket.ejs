@@ -1,0 +1,27 @@
+<p>
+  In this mode, the <code>item-list</code> div has a URL set in its <code>data-stream-source</code>
+  attribute which starts with <code>ws:</code> pointing to a WebSocket server. This naming convention signals to the
+  attached <code>StreamController</code> to initiate a WebSocket connection instead of a SSE connection.
+</p>
+
+<ol>
+  <li>
+    When the controller is <code>connect</code>ed, the WebSocket connection will be made to the server, and linked to
+    <code>Turbo</code>, and <code>Turbo</code> will begin watching that connection for events with HTML snippets that
+    have
+    <code>turbo-stream</code> tags.
+  </li>
+  <li>
+    Tapping on any of the buttons submits a form to <code>/items/actions/plain/modify</code> with
+    <code>mode=<%=mode%></code>.
+    This causes the server route to <b>omit</b> returning anything in the response after performing the CRUD operation.
+    Instead, it will send a message to a configured EventEmitter with the updated item(s).
+  </li>
+  <li>
+    The server is also configured to instantiate a WebSocket server when it receives a message from the above
+    EventEmitter, which will contain the updated item(s). It will serialize them into a <code>turbo-stream</code> HTML
+    snippet, and send it to all connected WebSocket clients.
+  </li>
+</ol>
+
+<p>Try this example with several browser instances pointing to this <code><%= mode %></code> version of the page.</p>
