@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: turbo-stream/index.mjs</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,52 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: turbo-stream/index.mjs</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import createTag from './create-tag';
 
+/**
+ * Class for generating &lt;turbo-stream> HTML snippets in various ways.
+ */
+export default class TurboStream {
+  constructor(attributes, content) {
+    if (!attributes) throw new Error('TurboStream: missing attributes');
+    this.attributes = attributes;
+    this.content = content;
+  }
 
-    <h3> </h3>
+  /**
+   * @returns {string} A somewhat pretty formatted HTML &lt;turbo-stream> snippet.
+   */
+  toHtml() {
+    return createTag(this.attributes, this.content, false);
+  }
 
+  /**
+   * @returns {string} A single SSE "data" message with a single-line HTML &lt;turbo-stream> snippet,
+   * with a double-newline suffix.
+   */
+  toSseMessage() {
+    return `data: ${createTag(this.attributes, this.content, true)}\n\n`;
+  }
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+  /**
+   * @returns {string} A single-line HTML &lt;turbo-stream> snippet.
+   */
+  toWebSocketMessage() {
+    return createTag(this.attributes, this.content, true);
+  }
+}
+</code></pre>
+        </article>
+    </section>
 
 
 

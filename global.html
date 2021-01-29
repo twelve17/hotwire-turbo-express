@@ -104,6 +104,325 @@
     
 
     
+    <h4 class="name" id="toHtml"><span class="type-signature"></span>toHtml<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="turbo-stream_index.mjs.html">turbo-stream/index.mjs</a>, <a href="turbo-stream_index.mjs.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A somewhat pretty formatted HTML <turbo-stream> snippet.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toSseMessage"><span class="type-signature"></span>toSseMessage<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="turbo-stream_index.mjs.html">turbo-stream/index.mjs</a>, <a href="turbo-stream_index.mjs.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A single SSE "data" message with a single-line HTML <turbo-stream> snippet,
+with a double-newline suffix.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toWebSocketMessage"><span class="type-signature"></span>toWebSocketMessage<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="turbo-stream_index.mjs.html">turbo-stream/index.mjs</a>, <a href="turbo-stream_index.mjs.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A single-line HTML <turbo-stream> snippet.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="turboStream"><span class="type-signature"></span>turboStream<span class="signature">(mimeType)</span><span class="type-signature"> &rarr; {<a href="global.html#turboStream">turboStream</a>}</span></h4>
     
 
@@ -208,7 +527,7 @@ Content-Type header, in response to such requests.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.mjs.html">index.mjs</a>, <a href="index.mjs.html#line135">line 135</a>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -268,32 +587,34 @@ Content-Type header, in response to such requests.</td>
 
         
                 
-<h4 class="name" id="StreamSpec">StreamSpec</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
 
     
 
-<table class="props">
+    
+    <h4 class="name" id="compileView"><span class="type-signature"></span>compileView<span class="signature">(spec)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function for compiling a single view template into a turbo-stream
+HTML snippet.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
     <thead>
     <tr>
         
@@ -315,13 +636,13 @@ Content-Type header, in response to such requests.</td>
 
         <tr>
             
-                <td class="name"><code>stream</code></td>
+                <td class="name"><code>spec</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="global.html#TurboStreamSpec">TurboStreamSpec</a></span>
 
 
             
@@ -331,13 +652,14 @@ Content-Type header, in response to such requests.</td>
 
             
 
-            <td class="description last">Attributes to set in the <turbo-stream>
-tag.</td>
+            <td class="description last">an object conforming to TurboStreamSpec type.</td>
         </tr>
 
     
     </tbody>
 </table>
+
+
 
 
 
@@ -371,7 +693,7 @@ tag.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.mjs.html">index.mjs</a>, <a href="index.mjs.html#line39">line 39</a>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -386,10 +708,208 @@ tag.</td>
 
 
 
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - HTML containing a the rendered view, wrapped in
+a <turbo-stream> tag,
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+            
+                
+
+    
+
+    
+    <h4 class="name" id="compileViews"><span class="type-signature"></span>compileViews<span class="signature">(specs)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function for compiling multiple view templates into turbo-streams
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>specs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="global.html#TurboStreamSpec">TurboStreamSpec</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an object conforming to TurboStreamSpec type.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - HTML containing a set of <turbo-stream> tags,
+each wrapping one of the views provided. Tags are separated by a
+newline (\n).
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>&lt;pre>
-res.turboStream.renderViews(
+res.turboStream.compileViews(
  [
    {
      stream: {
@@ -420,7 +940,7 @@ res.turboStream.renderViews(
     
 
     
-    <h4 class="name" id="TurboMultipleStreamActionFunction"><span class="type-signature"></span>TurboMultipleStreamActionFunction<span class="signature">(view, variables, stream, onlyFormat<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="renderViews"><span class="type-signature"></span>renderViews<span class="signature">(specs)</span><span class="type-signature"></span></h4>
     
 
     
@@ -428,8 +948,417 @@ res.turboStream.renderViews(
 
 
 <div class="description">
-    Function for sending multiple view templates, each getting
-wrapped in its own <turbo-stream> tag.
+    Convenience function that calls compileViews() then sendStream()
+with the results.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>specs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="global.html#TurboStreamSpec">TurboStreamSpec</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an object conforming to TurboStreamSpec type.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    
+    <h4 class="name" id="sendStream"><span class="type-signature"></span>sendStream<span class="signature">(res, html, onlyFormat<span class="signature-attributes">opt</span>, mimeType<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Convenience function that sends (already rendered) html with the
+turbo-stream MIME type.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The express response object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>html</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The rendered html.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onlyFormat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">If true, will wrap the response in
+a "res.format" object, so that the route will _only_ respond to
+the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mimeType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    MIME_TYPE
+                
+                </td>
+            
+
+            <td class="description last">The mime type to
+use for the Content-Type header. Defaults to value in the
+constants file.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="send-stream.mjs.html">send-stream.mjs</a>, <a href="send-stream.mjs.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    
+    <h4 class="name" id="turboAction"><span class="type-signature"></span>turboAction<span class="signature">(view, variables<span class="signature-attributes">opt</span>, stream, onlyFormat<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function which will render a response with the a given
+template and variables, wrapped in a <turbo-stream> tag.
 </div>
 
 
@@ -497,7 +1426,7 @@ wrapped in its own <turbo-stream> tag.
                 </td>
             
 
-            <td class="description last">Path to the view view to render inside
+            <td class="description last">Path to the view to render inside
 the <turbo-stream> tag.</td>
         </tr>
 
@@ -519,6 +1448,8 @@ the <turbo-stream> tag.</td>
 
             
                 <td class="attributes">
+                
+                    &lt;optional><br>
                 
 
                 
@@ -569,9 +1500,7 @@ in the same format as is done for req.render.</td>
                 </td>
             
 
-            <td class="description last">Attributes to set in the <turbo-stream>
-tag. Note that "action" here will be ignored, as it will be set
-by the function itself.</td>
+            <td class="description last">Attributes to set in the <turbo-stream> tag.</td>
         </tr>
 
     
@@ -653,204 +1582,7 @@ the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.mjs.html">index.mjs</a>, <a href="index.mjs.html#line89">line 89</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-                
-
-    
-
-    
-    <h4 class="name" id="TurboSingleStreamActionFunction"><span class="type-signature"></span>TurboSingleStreamActionFunction<span class="signature">(streams, onlyFormat<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Function which will render a response with the a given
-template and variables, wrapped in a <turbo-stream> tag.
-
- streams, onlyFormat = false
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>streams</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="global.html#StreamSpec">StreamSpec</a>></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">Array of stream specifications.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onlyFormat</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">If true, will wrap the response in
-a "res.format" object, so that the route will _only_ respond to
-the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.mjs.html">index.mjs</a>, <a href="index.mjs.html#line75">line 75</a>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line127">line 127</a>
     </li></ul></dd>
     
 
@@ -891,7 +1623,7 @@ the Turbo mime type, or return a HTTP 406 (Not Acceptable) response.</td>
     middleware.
 
 Middleware which decorates the express response object with a
-"turboStream" object.
+"turboStream" object, with the following properties:
 </div>
 
 
@@ -942,7 +1674,7 @@ Middleware which decorates the express response object with a
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#TurboSingleStreamActionFunction">TurboSingleStreamActionFunction</a></span>
+<span class="param-type"><a href="global.html#turboAction">turboAction</a></span>
 
 
             
@@ -966,7 +1698,7 @@ turbo stream with the "append" action.</td>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#TurboSingleStreamActionFunction">TurboSingleStreamActionFunction</a></span>
+<span class="param-type"><a href="global.html#turboAction">turboAction</a></span>
 
 
             
@@ -990,7 +1722,7 @@ turbo stream with the "prepend" action.</td>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#TurboSingleStreamActionFunction">TurboSingleStreamActionFunction</a></span>
+<span class="param-type"><a href="global.html#turboAction">turboAction</a></span>
 
 
             
@@ -1014,7 +1746,7 @@ turbo stream with the "replace" action.</td>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#TurboSingleStreamActionFunction">TurboSingleStreamActionFunction</a></span>
+<span class="param-type"><a href="global.html#turboAction">turboAction</a></span>
 
 
             
@@ -1032,13 +1764,13 @@ turbo stream with the "update" action.</td>
 
         <tr>
             
-                <td class="name"><code>renderViews</code></td>
+                <td class="name"><code>compileView</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#TurboMultipleStreamActionFunction">TurboMultipleStreamActionFunction</a></span>
+<span class="param-type">compiledView</span>
 
 
             
@@ -1048,8 +1780,76 @@ turbo stream with the "update" action.</td>
 
             
 
-            <td class="description last">Function to
-generate multiple turbo streams in a single response.</td>
+            <td class="description last">See compileView jsdoc.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>compileViews</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">compiledViews</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">See compileViews jsdoc.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sendStream</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#sendStream">sendStream</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">See sendStream jsdoc.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>TurboStream</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">class</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">See TurboStream jsdoc.</td>
         </tr>
 
     
@@ -1088,7 +1888,203 @@ generate multiple turbo streams in a single response.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.mjs.html">index.mjs</a>, <a href="index.mjs.html#line107">line 107</a>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line151">line 151</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="TurboStreamSpec">TurboStreamSpec</h4>
+
+
+
+
+<div class="description">
+    Object with necessary properties to render a view with optional variables
+and wrap it in a <turbo-stream> tag.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stream</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Attributes to set in the <turbo-stream>
+tag.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>view</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Path to the view to render inside
+the <turbo-stream> tag.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>variables</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Variables to pass on to the view,
+in the same format as is done for req.render.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="middleware.mjs.html">middleware.mjs</a>, <a href="middleware.mjs.html#line6">line 6</a>
     </li></ul></dd>
     
 
@@ -1118,13 +2114,13 @@ generate multiple turbo streams in a single response.</td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#toHtml">toHtml</a></li><li><a href="global.html#toSseMessage">toSseMessage</a></li><li><a href="global.html#toWebSocketMessage">toWebSocketMessage</a></li><li><a href="global.html#turboStream">turboStream</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Thu Jan 28 2021 01:39:45 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri Jan 29 2021 00:36:28 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
