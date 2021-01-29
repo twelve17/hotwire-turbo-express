@@ -2,21 +2,164 @@
 
 ![Node.js CI](https://github.com/twelve17/hotwire-turbo-express/workflows/Node.js%20CI/badge.svg)
 
-ExpressJS middleware for <a href="https://hotwire.dev/">hotwire</a> <a href="https://turbo.hotwire.dev/">Turbo</a> streams.
+ExpressJS middleware for sending turbo-stream HTML fragments to a <a href="https://hotwire.dev/">hotwire</a> <a href="https://turbo.hotwire.dev/">Turbo</a> client. It aims to perform a subset of functionality that <a href="https://github.com/hotwired/turbo-rails">turbo-rails provides</a> with <a href="https://docs.ruby-lang.org/en/2.3.0/ERB.html">ERB templates</a>, but with <a href="https://ejs.co">EJS</a> templates.
 
-# Requirements
+## Requirements
 
 - Node 14.x or newer
 
-# Installation
+## Installation
 
 ```
 npm i hotwire-turbo-express
 ```
 
-# API
+## Overview
 
-See [JSDoc](https://twelve17.github.io/hotwire-turbo-express/global.html)
+When a Turbo encounters a `<turbo-stream>` element in a HTML fragment delivered by a server over a ["WebSocket, SSE or other transport"](https://turbo.hotwire.dev/handbook/streams), the DOM element with an id that matches the `target` attribute will be modified with the updates inside the `<turbo-stream>`.
+
+### HTTP Response Stream
+
+In this scenario, a client submits a form.
+
+1. Turbo includes `text/vnd.turbo-stream.html` in the HTTP `Accept` header.
+2. The server detects the above header and responds with `Content-Type: text/vnd.turbo-stream.html`, and includes a HTML fragment with one or more `<turbo-stream>` elements.
+3. On the client, `Turbo` will process the above streams and update the matching DOM elements.
+
+### WebSocket & SSE
+
+Here, a [stimulus controller](https://stimulus.hotwire.dev) connected to a HTML element will open a Websocket or [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) connection to a server. Whenever a message comes in which has `<turbo-stream>` tags, Turbo will process its contents in the same fashion as in the HTTP Response Stream scenario.
+
+## Usage
+
+- `turboStream` - Middleware function for express.
+
+  Options:
+  - `mimeType` - The Turbo stream MIME type. Defaults to `text/vnd.turbo-stream.html`.
+
+  ```
+  import turboStream from 'hotwire-turbo-express';
+
+  const app = express();
+
+  app.use(turboStream());
+  ```
+
+The middleware will add a `res.turboStream` property with some functions:
+- `append`, `prepend`, `replace`, and `update` - These functions are the equivalent of the turbo-rails `turbo_stream.append`, `turbo_stream.prepend`, etc, methods, with a slightly different options to more closely match how EJS works in express:
+  - `turboStream.append(view, locals, stream, onlyFormat)`
+
+    options:
+    - `view` and `locals` are the same arguments that would be passed to [`res.render`](https://expressjs.com/en/4x/api.html#res.render>`)</a>.
+    - `stream` is an object of which attributes will be added to the `turbo-stream` HTML element, with the exception of `action`, which will be set to the value matching the append/prepend/replace/update function.
+
+  Given the `MessagesController` rails example <a href="https://turbo.hotwire.dev/handbook/streams">in the turbo docs</a>, this would be the equivalent here:
+    ```
+    const upload = multer();
+
+    app.post('/messages/create', upload.none(), async (req, res, next) => {
+      const message = createMessage(...);
+      const locals = { message };
+      const view = 'messages/partials/message';
+      const stream = { target: 'list' }
+      return res.turboStream.append(view, locals, stream);
+    });
+    ```
+  - `renderViews` - The append/prepend/replace/update functions send a single `<turbo-stream>` element in the response. However, you can ["render any number of stream elements in a single stream message"](https://turbo.hotwire.dev/handbook/streams). `renderViews` providers this ability by accepting an array of objects, each which will result in a `<turbo-stream>` element with its own properties. Each entry is tied to a given EJS view to be rendered.
+    - `turboStream.renderViews(<array of stream specs>, <onlyFormat>)
+    Stream spec array attributes:
+      - `view` and `locals`  accept the same arguments that would be passed to [`res.render`](https://expressjs.com/en/4x/api.html#res.render>`)</a>.
+      - `stream` is an object of which attributes will be added to the `turbo-stream` HTML element
+    ```
+    router.post('/page', upload.none(), async (req, res) => {
+        const { hasMore, items } = await getItems();
+        return res.turboStream.renderViews([
+          {
+            stream: {
+              action: 'append',
+              target: 'item-list',
+            },
+            locals: { items },
+            view: 'item-list/partials/item-list',
+          },
+          {
+            stream: {
+              action: 'replace',
+              target: 'item-list-more-button',
+            },
+            locals: { hasMore },
+            view: 'item-list/partials/item-list-more-button',
+          },
+        ], true);
+      });
+      ```
+    - `TurboStream` - A simple class for creating `<turbo-stream>` HTML fragments.
+      - constructor: `new TurboStream(attributes, content)`
+        - `attributes` - An object of attributes to set in the `<turbo-stream>` tag.
+        - `content` - A string with the content to place as the child element of the tag.
+      - Instance methods:
+          - `toHtml()`  - Returns an HTML fragment string.
+          ```
+            > tag = new turboStream.TurboStream({ action: 'append' }, "hi there")
+            > console.log(tag.toHtml())
+
+              <turbo-stream action="append">
+                <template>
+                  hi there
+                </template>
+              </turbo-stream>
+          ```
+          - `toSseMessage()` - Returns an HTML fragment string suitable for sending in a server sent event message. The Turbo client [looks for the `<turbo-stream>` in the `data` attribute](https://github.com/hotwired/turbo/blob/main/src/observers/stream_observer.ts#L60). The message will include two newline characters at the end, to signal a flush of the SSE response.
+          ```
+            > tag = new turboStream.TurboStream({ action: 'append' }, "hi there")
+            > console.log(tag.toSseMessage())
+            data: <turbo-stream action="append">    <template>      hi there    </template>  </turbo-stream>
+          ```
+          - `toWebSocketMessage()` - Returns an HTML fragment string suitable for sending in a WebSocket message.
+          ```
+            > tag = new turboStream.TurboStream({ action: 'append' }, "hi there")
+            > console.log(tag.toWebSocketMessage())
+            > <turbo-stream action="append">    <template>      hi there    </template>  </turbo-stream>
+          ```
+          While this will work, consider expanding the scope of these messages, e.g. to include signing messages to ensure they are not tampered with, [as is done in turbo-rails](https://github.com/hotwired/turbo-rails/blob/6ba6e005990682a61d82067dc141afdc98bd6c22/app/channels/turbo/streams/stream_name.rb).
+
+- `TurboStream` is also exported so you can use it on its own. Here is an example of sending a turbo stream message over WebSocket:
+```
+import { TurboStream } from 'hotwire-turbo-express';
+import WebSocket from 'ws';
+
+/**
+ * Create a new item record and send a message to the WS server
+ * with a turbo stream of the given html.
+ */
+const sendItemWsMessage = (url, stream, html) => {
+  const tag = new TurboStream(stream, html);
+  const ws = new WebSocket(url);
+  ws.on('open', async () => {
+    ws.send(tag.toWebSocketMessage());
+    return ws.close();
+  });
+};
+
+```
+
+[JSDocs](https://twelve17.github.io/hotwire-turbo-express/global.html)
+
+# example-app
+
+The example app has complete implementations showing how to use this library to work with `<turbo-stream>`s. Explanation of the use cases are shown in the app itself.
+
+## Setup and Run
+
+```
+# builds the NPM, installs it in the app
+npm run example:setup
+
+# calls npm start in the app
+npm run example:start
+```
+
+Browse to http://localhost:3000
 
 # Turbo Stream Protocol Notes
 
@@ -36,9 +179,9 @@ connectStreamSource(new EventSource('http://foo/bar');
 
 Once connected, messages with `<turbo-stream>`  HTML snippets will be processed by Turbo.
 
-There is an example using stimulus in the example app, in [`src/controllers/stream-controller`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/src/controllers/stream-controller.mjs).
+There is an example using stimulus in the example app, in [`src/controllers/stream-controller`](https://github.com/twelve17/hotwire-turbo-express/blob/main/example-app/src/controllers/stream-controller.mjs).
 
-## Server-Side Events (SSE) Payload Format
+## Server Sent Events (SSE) Payload Format
 
 Payload format is: `data: ` {html with turbo stream HTML in one line}:
 
@@ -52,7 +195,7 @@ Express response:
 res.write("data: <turbo-stream action='append'...>")
 ```
 
-See example in the [`/item-actions/sse-stream`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/app.mjs#L88) route in `example-app/app.mjs`.
+See example in the [`/items/actions/stream`](https://github.com/twelve17/hotwire-turbo-express/blob/main/example-app/routes/items/index.mjs#L43) route in `example-app/app.mjs`.
 
 ## WebSocket Payload Format
 
@@ -66,45 +209,7 @@ ws.on('open', async () => {
 });
 ```
 
-See example server at the bottom of [`example-app/bin/www.mjs`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/bin/www.mjs#L97) and client in [`example-app/add-list-item-ws.mjs`](https://github.com/twelve17/hotwire-turbo-express/blob/webpack/example-app/bin/add-list-item-ws.mjs#L25).
-
-# TODO
-
-- Document SSE and Websocket examples in example-app.
-
-# Examples
-
-Given the `MessagesController` example in the <a href="https://turbo.hotwire.dev/handbook/streams">Turbo Stream Ruby example</a>, this would be the equivalent in expressjs:
-
-```
-# app.js
-
-const app = express();
-
-const upload = multer()
-app.use(turboStream());
-
-app.post('/messages/create', upload.none(), async (req, res, next) => {
-  const message = createMessage(...);
-  const locals = { message };
-  const view = 'messages/partials/message';
-  const stream = { target: 'list' }
-  return res.turboStream.append(view, locals, stream);
-});
-```
-
-See more examples in the example-app.
-
-# example-app
-
-## Setup and Run
-
-```
-npm run example:setup
-npm run example:start
-```
-
-Browse to http://localhost:3000
+See example server at the bottom of [`example-app/bin/www.mjs`](https://github.com/twelve17/hotwire-turbo-express/blob/main/example-app/bin/www.mjs#L97) and client in [`example-app/lib/send-item-ws-message.mjs`](https://github.com/twelve17/hotwire-turbo-express/blob/main/example-app/lib/send-item-ws-message.mjs).
 
 # Development
 
