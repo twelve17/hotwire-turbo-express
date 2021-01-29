@@ -27,7 +27,7 @@ describe('turboStream', () => {
             action: 'append',
             target: 'list',
           },
-          variables: { greeting: 'heyyy' },
+          locals: { greeting: 'heyyy' },
           view: 'partials/greeting',
         },
         {
@@ -35,7 +35,7 @@ describe('turboStream', () => {
             action: 'replace',
             target: 'button',
           },
-          view: 'partials/no-variables',
+          view: 'partials/no-locals',
         },
       ]);
 
@@ -83,18 +83,18 @@ describe('turboStream', () => {
 
   ACTIONS.forEach((action) => {
     describe(`#${action}()`, () => {
-      describe('with view variables', () => {
+      describe('with view locals', () => {
         const view = 'partials/greeting';
-        const variables = { greeting: 'howdy' };
+        const locals = { greeting: 'howdy' };
         const stream = { target: 'greeting' };
 
         describe('with default onlyView parameter', () => {
           const testCase = (req, res) => res.format({
             [MIME_TYPE]() {
-              return res.turboStream[action](view, variables, stream);
+              return res.turboStream[action](view, locals, stream);
             },
             default() {
-              return res.render(view, variables);
+              return res.render(view, locals);
             },
           });
 
@@ -132,7 +132,7 @@ describe('turboStream', () => {
         });
 
         describe('with onlyView parameter set to true', () => {
-          const testCase = (req, res) => res.turboStream[action](view, variables, stream, true);
+          const testCase = (req, res) => res.turboStream[action](view, locals, stream, true);
 
           it('should respond to a turbo request', async () => {
             const response = await testRequest(testCase)
@@ -159,12 +159,12 @@ describe('turboStream', () => {
         });
       });
 
-      describe('without view variables', () => {
-        const view = 'partials/no-variables';
+      describe('without view locals', () => {
+        const view = 'partials/no-locals';
         const stream = { target: 'greeting' };
-        const variables = undefined;
+        const locals = undefined;
 
-        const testCase = (req, res) => res.turboStream[action](view, variables, stream, true);
+        const testCase = (req, res) => res.turboStream[action](view, locals, stream, true);
 
         it('should render response', async () => {
           const response = await testRequest(testCase)
@@ -188,9 +188,9 @@ describe('turboStream', () => {
       describe('template with syntax error', () => {
         const view = 'partials/syntax-error';
         const stream = { target: 'greeting' };
-        const variables = undefined;
+        const locals = undefined;
 
-        const testCase = (req, res) => res.turboStream[action](view, variables, stream, true);
+        const testCase = (req, res) => res.turboStream[action](view, locals, stream, true);
 
         it('should pass error to error middleware', async () => {
           const response = await testRequest(testCase)

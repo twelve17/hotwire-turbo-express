@@ -28,7 +28,7 @@ const routerFactory = (upload) => {
           action: 'append',
           target: 'item-list',
         },
-        variables: { cursor: nextCursor, items },
+        locals: { cursor: nextCursor, items },
         view: 'item-list/partials/item-list',
       },
       {
@@ -36,7 +36,7 @@ const routerFactory = (upload) => {
           action: 'replace',
           target: 'item-list-more-button',
         },
-        variables: { cursor: nextCursor, hasMore },
+        locals: { cursor: nextCursor, hasMore },
         view: 'item-list/partials/item-list-more-button',
       },
     ], true);
