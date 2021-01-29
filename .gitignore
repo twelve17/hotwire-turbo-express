@@ -6,6 +6,9 @@ example-app/tmp
 *.sw*
 **/.vscode
 
+# MacOS
+.DS_Store
+
 # Logs
 logs
 *.log

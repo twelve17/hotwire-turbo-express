@@ -124,30 +124,32 @@ The middleware will add a `res.turboStream` property with some functions:
           While this will work, consider expanding the scope of these messages, e.g. to include signing messages to ensure they are not tampered with, [as is done in turbo-rails](https://github.com/hotwired/turbo-rails/blob/6ba6e005990682a61d82067dc141afdc98bd6c22/app/channels/turbo/streams/stream_name.rb).
 
 - `TurboStream` is also exported so you can use it on its own. Here is an example of sending a turbo stream message over WebSocket:
-```
-import { TurboStream } from 'hotwire-turbo-express';
-import WebSocket from 'ws';
+  ```
+  import { TurboStream } from 'hotwire-turbo-express';
+  import WebSocket from 'ws';
 
-/**
- * Create a new item record and send a message to the WS server
- * with a turbo stream of the given html.
- */
-const sendItemWsMessage = (url, stream, html) => {
-  const tag = new TurboStream(stream, html);
-  const ws = new WebSocket(url);
-  ws.on('open', async () => {
-    ws.send(tag.toWebSocketMessage());
-    return ws.close();
-  });
-};
-
-```
+  /**
+  * Create a new item record and send a message to the WS server
+  * with a turbo stream of the given html.
+  */
+  const sendItemWsMessage = (url, stream, html) => {
+    const tag = new TurboStream(stream, html);
+    const ws = new WebSocket(url);
+    ws.on('open', async () => {
+      ws.send(tag.toWebSocketMessage());
+      return ws.close();
+    });
+  };
+  ```
 
 [JSDocs](https://twelve17.github.io/hotwire-turbo-express/global.html)
 
 # example-app
 
 The example app has complete implementations showing how to use this library to work with `<turbo-stream>`s. Explanation of the use cases are shown in the app itself.
+
+
+![Example App Screen Recording][images/example-app-ws-example.gif]
 
 ## Setup and Run
 
